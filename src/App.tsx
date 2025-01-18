@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { usePlankStore } from './store/plank-store';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import {
   AppBar,
@@ -22,6 +23,7 @@ const AppContent: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const userProfile = usePlankStore(state => state.userProfile);
 
   // Handle PWA installation
   useEffect(() => {
@@ -106,6 +108,8 @@ const AppContent: React.FC = () => {
         open={isSidebarOpen}
         onClose={handleSidebarClose}
         onMenuItemClick={handleMenuItemClick}
+        userName={userProfile.name}
+        userAvatar={userProfile.avatar}
       />
 
       <Box sx={{ flexGrow: 1, marginTop: '64px' }}>

@@ -1,6 +1,6 @@
 {
-  "name": "Plank Training Timer",
-  "short_name": "Plank Timer",
+  "name": "Just Plank",
+  "short_name": "Just Plank App",
   "description": "Track and improve your plank training with daily reminders and progress tracking",
   "start_url": "/",
   "display": "standalone",

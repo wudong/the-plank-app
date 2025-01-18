@@ -6,13 +6,21 @@ import {
   ReminderSettings, 
   TimeAggregation,
   ProgressDataPoint,
-  SessionRating
+  SessionRating,
 } from '../types/plank';
+
+interface UserProfile {
+  name: string;
+  age?: string;
+  gender?: string;
+  avatar?: string;
+}
 
 interface PlankState {
   // Data
   sessions: PlankSession[];
   reminderSettings: ReminderSettings;
+  userProfile: UserProfile;
   
   // Timer state
   isActive: boolean;
@@ -22,11 +30,13 @@ interface PlankState {
   stats: PlankStats;
   
   // Actions
+  reset: () => void;
   startTimer: () => void;
   stopTimer: () => void;
   resetTimer: () => void;
   completeSession: (rating?: SessionRating) => void;
   updateReminderSettings: (settings: Partial<ReminderSettings>) => void;
+  updateUserProfile: (profile: Partial<UserProfile>) => void;
   getProgressData: (aggregation: TimeAggregation) => ProgressDataPoint[];
   calculateTargetDuration: () => number;
   requestNotificationPermission: () => Promise<void>;
@@ -139,6 +149,9 @@ export const usePlankStore = create<PlankState>()(
         time: '09:00',
         notificationsPermission: false
       },
+      userProfile: {
+        name: 'User'
+      },
       isActive: false,
       currentTime: 0,
       stats: {
@@ -179,6 +192,10 @@ export const usePlankStore = create<PlankState>()(
         reminderSettings: { ...state.reminderSettings, ...settings }
       })),
 
+      updateUserProfile: (profile) => set((state) => ({
+        userProfile: { ...state.userProfile, ...profile }
+      })),
+
       getProgressData: (aggregation) => aggregateData(get().sessions, aggregation),
 
       calculateTargetDuration: () => Math.max(
@@ -196,7 +213,27 @@ export const usePlankStore = create<PlankState>()(
             }
           }));
         }
-      }
+      },
+
+      reset: () => set({
+        sessions: [],
+        reminderSettings: {
+          enabled: true,
+          time: '09:00',
+          notificationsPermission: false
+        },
+        userProfile: {
+          name: 'User'
+        },
+        isActive: false,
+        currentTime: 0,
+        stats: {
+          longestTime: 0,
+          longestStreak: 0,
+          currentStreak: 0,
+          lastWeekAverage: 0
+        }
+      })
     }),
     {
       name: 'plank-storage'
