@@ -16,7 +16,11 @@ import {
   DialogActions,
   Button,
   TextField,
+  IconButton,
+  Paper,
+  useTheme
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import TimerIcon from '@mui/icons-material/Timer';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -37,6 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   userName = 'User',
   userAvatar = '/default-avatar.png',
 }) => {
+  const theme = useTheme();
   const [cleanDataDialogOpen, setCleanDataDialogOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [editProfile, setEditProfile] = useState({
@@ -53,11 +58,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     setCleanDataDialogOpen(true);
   };
 
-  const handleConfirmCleanData = useCallback(() => {    
+  const handleConfirmCleanData = useCallback(() => {        
     setCleanDataDialogOpen(false);
     usePlankStore.getState().reset();
     onClose();
-  }, [ onClose]);
+  }, [onMenuItemClick, onClose]);
 
   const handleCloseDialog = () => {
     setCleanDataDialogOpen(false);
@@ -93,17 +98,44 @@ const Sidebar: React.FC<SidebarProps> = ({
           role="presentation"
         >
           
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', height: 200, bgcolor: 'primary.main', color: 'white', pt: 6 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              position: 'relative', 
+              my: 4,
+            }}>
               <Avatar 
                 src={userAvatar}
-                sx={{ width: 80, height: 80, mb: 1 }}
-                onClick={handleEditProfile}
+                sx={{ 
+                  width: 80, 
+                  height: 80, 
+                  mb: 1,
+                  border: `3px solid ${theme.palette.background.paper}`,
+                  boxShadow: theme.shadows[3],
+                  backgroundColor: theme.palette.secondary.light
+                }}
               >
                 {userName?.charAt(0).toUpperCase()}
               </Avatar>
-              <Typography variant="h6" sx={{ mb: 1 }}>
-                {userName}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography 
+                  variant="h6" 
+                  sx={{                     
+                    fontWeight: 500
+                  }}
+                >                
+                  {userName}
+                  
+                </Typography>
+                <IconButton 
+                  size="small" 
+                  sx={{ ml: 1 }}
+                  onClick={handleEditProfile}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </Box>
             </Box>
           <Divider />
           <List>
@@ -155,7 +187,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         </DialogActions>
       </Dialog>
 
-      {/* Edit Profile Modal */}
       <Dialog open={editProfileOpen} onClose={handleCloseEditProfile}>
         <DialogTitle>Edit Profile</DialogTitle>
         <DialogContent>
