@@ -123,25 +123,24 @@ export const Timer: React.FC = () => {
         <IconButton
           onClick={() => {
             if (isActive) {
-              // Stop and record current session
+              // Just stop the timer, keeping time on the clock
               stopTimer();
-              completeSession();
             } else if (!isActive && currentTime > 0) {
-              // Reset for a new session when restart is clicked
+              // Reset - complete the session and reset timer to 0
+              completeSession();
               resetTimer();
-              startTimer();
             } else {
               // Start new session
               startTimer();
             }
           }}
-          color={isActive ? "error" : (!isActive && currentTime > 0 ? "success" : "primary")}
+          color={isActive ? "error" : (!isActive && currentTime > 0 ? "warning" : "primary")}
           size="large"
           sx={{ 
             bgcolor: isActive 
               ? 'error.main' 
               : (!isActive && currentTime > 0 
-                  ? 'success.main' 
+                  ? 'warning.main' 
                   : 'primary.main'), 
             color: 'white', 
             width: 80,
@@ -153,7 +152,7 @@ export const Timer: React.FC = () => {
               bgcolor: isActive 
                 ? 'error.dark' 
                 : (!isActive && currentTime > 0 
-                    ? 'success.dark' 
+                    ? 'warning.dark' 
                     : 'primary.dark')
             }
           }}
