@@ -23,19 +23,19 @@ export const StatsDisplay: React.FC = () => {
   const statItems = [
     {
       label: 'Longest Time',
-      value: formatTime(stats.longestTime),
+      value: `${formatTime(stats.longestTime)} `,
       icon: TimelineIcon,
       color: theme.palette.primary.main
     },
     {
       label: 'Longest Streak',
-      value: `${stats.longestStreak} days`,
+      value: `${stats.longestStreak} d`,
       icon: StarIcon,
       color: theme.palette.warning.main
     },
     {
       label: 'Current Streak',
-      value: `${stats.currentStreak} days`,
+      value: `${stats.currentStreak} d`,
       icon: StreakIcon,
       color: stats.currentStreak >= stats.longestStreak
         ? theme.palette.success.main
