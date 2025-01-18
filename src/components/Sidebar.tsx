@@ -16,10 +16,7 @@ import {
   DialogActions,
   Button,
   TextField,
-  IconButton,
-  Paper
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import TimerIcon from '@mui/icons-material/Timer';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
