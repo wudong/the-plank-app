@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   IconButton,
@@ -6,6 +6,7 @@ import {
   CircularProgress,
   useTheme
 } from '@mui/material';
+import { RatingDialog } from './rating-dialog';
 import {
   PlayArrow as PlayIcon,
   Stop as StopIcon,
@@ -26,8 +27,10 @@ export const Timer: React.FC = () => {
     startTimer,
     stopTimer,
     resetTimer,
-    completeSession
+    completeSession,
+    targetDuration
   } = useTimer();
+  const [showRating, setShowRating] = useState(false);
 
   // Sound effects
   useEffect(() => {
@@ -123,11 +126,9 @@ export const Timer: React.FC = () => {
         <IconButton
           onClick={() => {
             if (isActive) {
-              // Just stop the timer, keeping time on the clock
               stopTimer();
+              setShowRating(true);
             } else if (!isActive && currentTime > 0) {
-              // Reset - complete the session and reset timer to 0
-              completeSession();
               resetTimer();
             } else {
               // Start new session
@@ -174,6 +175,18 @@ export const Timer: React.FC = () => {
           Target Reached! Keep Going!
         </Typography>
       )}
+
+      <RatingDialog
+        open={showRating}
+        onClose={() => setShowRating(false)}
+        onRate={(rating) => {
+          completeSession(rating);
+          setShowRating(false);
+        }}
+        targetReached={isTargetReached}
+        sessionTime={currentTime}
+        targetTime={targetDuration}
+      />
     </Box>
   );
 };

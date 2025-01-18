@@ -5,7 +5,8 @@ import {
   PlankStats, 
   ReminderSettings, 
   TimeAggregation,
-  ProgressDataPoint 
+  ProgressDataPoint,
+  SessionRating
 } from '../types/plank';
 
 interface PlankState {
@@ -24,7 +25,7 @@ interface PlankState {
   startTimer: () => void;
   stopTimer: () => void;
   resetTimer: () => void;
-  completeSession: () => void;
+  completeSession: (rating?: SessionRating) => void;
   updateReminderSettings: (settings: Partial<ReminderSettings>) => void;
   getProgressData: (aggregation: TimeAggregation) => ProgressDataPoint[];
   calculateTargetDuration: () => number;
@@ -154,14 +155,15 @@ export const usePlankStore = create<PlankState>()(
       
       resetTimer: () => set({ currentTime: 0, isActive: false }),
       
-      completeSession: () => {
+      completeSession: (rating?: SessionRating) => {
         const { currentTime, sessions } = get();
         const newSession: PlankSession = {
           id: Date.now().toString(),
           duration: currentTime,
           date: new Date().toISOString(),
           targetDuration: get().calculateTargetDuration(),
-          targetReached: currentTime >= get().calculateTargetDuration()
+          targetReached: currentTime >= get().calculateTargetDuration(),
+          rating
         };
         
         const updatedSessions = [...sessions, newSession];
@@ -181,7 +183,7 @@ export const usePlankStore = create<PlankState>()(
 
       calculateTargetDuration: () => Math.max(
         get().stats.lastWeekAverage,
-        30 // minimum target of 30 seconds
+        60 // minimum target of 30 seconds
       ),
 
       requestNotificationPermission: async () => {

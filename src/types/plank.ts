@@ -1,12 +1,15 @@
 /**
  * Represents a single plank exercise session
  */
+export type SessionRating = 'easy' | 'not-bad' | 'ok' | 'hard' | 'superman';
+
 export interface PlankSession {
   id: string;
   duration: number; // in seconds
   date: string; // ISO string
   targetReached: boolean;
   targetDuration: number; // in seconds
+  rating?: SessionRating;
 }
 
 /**

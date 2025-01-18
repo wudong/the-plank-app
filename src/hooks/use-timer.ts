@@ -56,6 +56,7 @@ export const useTimer = () => {
     stopTimer,
     resetTimer,
     completeSession,
-    formatTime
+    formatTime,
+    targetDuration
   };
 };
