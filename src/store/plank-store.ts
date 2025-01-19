@@ -8,6 +8,7 @@ import {
   ProgressDataPoint,
   SessionRating,
 } from '../types/plank';
+import { computeStreak } from '../models/compute-streak';
 
 interface UserProfile {
   name: string;
@@ -43,100 +44,6 @@ interface PlankState {
   requestNotificationPermission: () => Promise<void>;
 }
 
-interface StreakInfo {
-  length: number;
-  startDate: string;
-  endDate: string;
-}
-
-interface StreakStats {
-  longestStreak: StreakInfo;
-  currentStreak: StreakInfo;
-}
-
-const calculateStreaks = (dates: string[]): StreakStats => {
-  if (dates.length === 0) {
-    return {
-      longestStreak: { length: 0, startDate: '', endDate: '' },
-      currentStreak: { length: 0, startDate: '', endDate: '' },
-    };
-  }
-
-  // Sort dates in descending order (newest to oldest)
-  const sortedDates = [...dates].sort().reverse();
-
-  // Handle single date case
-  if (dates.length === 1) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const sessionDate = new Date(dates[0]);
-    const daysSinceSession = Math.round(
-      (today.getTime() - sessionDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    const isActiveStreak = daysSinceSession <= 1; // Today or yesterday
-
-    return {
-      longestStreak: { length: 1, startDate: dates[0], endDate: dates[0] },
-      currentStreak: isActiveStreak
-        ? { length: 1, startDate: dates[0], endDate: dates[0] }
-        : { length: 0, startDate: '', endDate: '' },
-    };
-  }
-
-  let currentStreak: StreakInfo = { length: 0, startDate: '', endDate: '' };
-  let longestStreak: StreakInfo = { length: 0, startDate: '', endDate: '' };
-  let tempStreak: StreakInfo = { length: 1, startDate: sortedDates[0], endDate: sortedDates[0] };
-
-  // Check if the most recent session was within the last day
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const mostRecentDate = new Date(sortedDates[0]);
-  const daysSinceLastSession = Math.round(
-    (today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const isCurrentlyStreaking = daysSinceLastSession <= 1;
-
-  // Calculate streaks by going backwards through dates
-  for (let i = 0; i < sortedDates.length - 1; i++) {
-    const currentDate = new Date(sortedDates[i]);
-    const nextDate = new Date(sortedDates[i + 1]);
-    currentDate.setHours(0, 0, 0, 0);
-    nextDate.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.round(
-      (currentDate.getTime() - nextDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-
-    if (diffDays === 1) {
-      // Consecutive days
-      tempStreak.length++;
-      tempStreak.startDate = sortedDates[i + 1];
-    } else {
-      // Streak broken
-      if (tempStreak.length > longestStreak.length) {
-        longestStreak = { ...tempStreak };
-      }
-      tempStreak = { length: 1, startDate: sortedDates[i + 1], endDate: sortedDates[i + 1] };
-    }
-  }
-
-  // Check if the final tempStreak is the longest
-  if (tempStreak.length > longestStreak.length) {
-    longestStreak = { ...tempStreak };
-  }
-
-  // Set current streak if it's active
-  if (isCurrentlyStreaking) {
-    currentStreak = {
-      length: tempStreak.length,
-      startDate: tempStreak.startDate,
-      endDate: sortedDates[0],
-    };
-  }
-
-  return { longestStreak, currentStreak };
-};
-
 const calculateStats = (sessions: PlankSession[]): PlankStats => {
   if (sessions.length === 0) {
     return {
@@ -170,7 +77,8 @@ const calculateStats = (sessions: PlankSession[]): PlankStats => {
   const uniqueDates = Array.from(dateMap.keys());
 
   // Calculate streaks
-  const streakStats = calculateStreaks(uniqueDates);
+  const uniqueDateObjects = uniqueDates.map((date) => new Date(date));
+  const streakResult = computeStreak(uniqueDateObjects);
 
   // Calculate last week average
   const lastWeek = new Date();
@@ -183,13 +91,13 @@ const calculateStats = (sessions: PlankSession[]): PlankStats => {
 
   return {
     longestTime,
-    longestStreak: streakStats.longestStreak.length,
-    currentStreak: streakStats.currentStreak.length,
+    longestStreak: streakResult.longestStreak,
+    currentStreak: streakResult.currentStreak,
     lastWeekAverage,
-    streakStartDate: streakStats.currentStreak.startDate,
-    streakEndDate: streakStats.currentStreak.endDate,
-    longestStreakStartDate: streakStats.longestStreak.startDate,
-    longestStreakEndDate: streakStats.longestStreak.endDate,
+    streakStartDate: streakResult.currentStreakStart?.toISOString().split('T')[0] || '',
+    streakEndDate: streakResult.currentStreakEnd?.toISOString().split('T')[0] || '',
+    longestStreakStartDate: streakResult.longestStreakStart?.toISOString().split('T')[0] || '',
+    longestStreakEndDate: streakResult.longestStreakEnd?.toISOString().split('T')[0] || '',
   };
 };
 

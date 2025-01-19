@@ -127,8 +127,9 @@ export const Timer: React.FC = () => {
               stopTimer();
               setSessionEnded(true);
             } else if (!isActive && currentTime > 0) {
+              // Treat reset as completing session with 'ok' rating
+              completeSession('ok');
               setSessionEnded(false);
-              resetTimer();
             } else {
               // Start new session
               startTimer();
@@ -181,7 +182,7 @@ export const Timer: React.FC = () => {
               maxWidth: '500px',
               height: '100px',
               objectFit: 'contain',
-              mt: 1,
+              mt: 4,
             }}
           />
         )}

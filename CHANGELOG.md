@@ -17,6 +17,8 @@
 
 ### Changed
 
+- Modified reset button behavior to automatically complete session with 'ok' rating instead of just resetting timer
+- Refactored streak calculation into a separate compute-streak module for improved maintainability and reusability
 - Replaced rating dialog with inline quick rating buttons for faster session rating
 - Made session list more compact by reducing spacing and using smaller typography
 - Redesigned Historical page layout with calendar view at the top and session details below
@@ -36,3 +38,4 @@
 - Fixed rating dialog appearing during active sessions by properly synchronizing session end state
 - Fixed layout jumps in Timer component by standardizing image and rating component heights to 100px
 - Fixed streak calculation by properly handling consecutive days and multiple daily sessions, ensuring accurate tracking of current and longest streaks
+- Fixed iOS PWA header issues by properly handling safe area insets and ensuring menu icon is clickable in standalone mode

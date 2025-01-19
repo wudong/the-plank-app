@@ -39,19 +39,6 @@ const AppContent: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
-  }, []);
-
   const handleInstall = async () => {
     if (!deferredPrompt) return;
 
@@ -82,12 +69,35 @@ const AppContent: React.FC = () => {
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppBar position="fixed" elevation={0}>
-        <Toolbar>
+      <AppBar 
+        position="fixed" 
+        elevation={0}
+        sx={{
+          background: (theme) => theme.palette.primary.main,
+          // Add safe area insets padding
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingLeft: 'env(safe-area-inset-left)',
+          paddingRight: 'env(safe-area-inset-right)'
+        }}
+      >
+        <Toolbar
+          sx={{
+            minHeight: { xs: '56px', sm: '64px' },
+            paddingLeft: { xs: 1, sm: 2 },
+            paddingRight: { xs: 1, sm: 2 },
+            // Ensure content is below the notch
+            marginTop: { xs: 1, sm: 0 }
+          }}
+        >
           <IconButton
             color="inherit"
             onClick={handleSidebarOpen}
-            edge="end"
+            edge="start"
+            sx={{
+              // Ensure the menu icon is properly positioned and clickable
+              position: 'relative',
+              zIndex: 1
+            }}
           >
             <MenuIcon />
           </IconButton>

@@ -14,6 +14,7 @@
 
 ## Streak Calculation Insights
 
+- Separating streak calculation into a dedicated module improves testability and reuse across different features
 - When calculating day streaks, it's crucial to normalize dates to midnight (setHours(0, 0, 0, 0)) for accurate day comparisons
 - Multiple sessions in a single day should be treated as one day for streak counting by using a Map or Set to track unique dates
 - Streak calculation should handle three key scenarios:
