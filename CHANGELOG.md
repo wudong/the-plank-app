@@ -17,7 +17,6 @@
 
 ### Changed
 
-- Modified reset button behavior to automatically complete session with 'ok' rating instead of just resetting timer
 - Refactored streak calculation into a separate compute-streak module for improved maintainability and reusability
 - Replaced rating dialog with inline quick rating buttons for faster session rating
 - Made session list more compact by reducing spacing and using smaller typography
@@ -33,6 +32,7 @@
 
 ### Fixed
 
+- Fixed service worker registration by implementing custom service worker with proper caching strategies and MIME type handling
 - Calendar view now correctly shows target reached status when any session in a day reaches the target
 - Fixed border styling for current day to highlight all four sides
 - Fixed rating dialog appearing during active sessions by properly synchronizing session end state

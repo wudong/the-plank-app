@@ -8,7 +8,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'sw.js',
+      injectRegister: 'auto',
       manifest: {
         name: 'Plank Training App',
         short_name: 'Plank App',
@@ -28,10 +31,10 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
-        cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-      },
+      devOptions: {
+        enabled: true,
+        type: 'module'
+      }
     }),
   ],
   server: {

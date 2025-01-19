@@ -22,3 +22,13 @@
   - Current streak needs to check if the last session was today or yesterday
   - Longest streak needs to examine all sequences of consecutive days
 - Processing dates in chronological order (oldest to newest) provides more intuitive streak counting logic
+
+## PWA Service Worker Insights
+
+- When using Vite PWA plugin with a custom service worker, setting `strategies: 'injectManifest'` enables full control over service worker implementation
+- Custom service workers should implement different caching strategies:
+  - Cache-first for static assets (images, icons, JS/CSS bundles)
+  - Network-first for dynamic routes and API calls
+- Service worker registration issues often stem from incorrect MIME type configuration
+- Service workers require proper configuration in both the Vite config (for development) and the service worker file itself (for production)
+- Enabling devOptions with `type: 'module'` in Vite PWA config helps with proper script handling during development

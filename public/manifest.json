@@ -19,18 +19,6 @@
       "purpose": "any maskable"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Start Timer",
-      "url": "/?action=start",
-      "icons": [{ "src": "pwa-192x192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "View Progress",
-      "url": "/?view=progress",
-      "icons": [{ "src": "pwa-192x192.png", "sizes": "192x192" }]
-    }
-  ],
   "related_applications": [],
   "prefer_related_applications": false
 }

@@ -17,7 +17,6 @@ export const Timer: React.FC = () => {
     isTargetReached,
     startTimer,
     stopTimer,
-    resetTimer,
     completeSession,
   } = useTimer();
   const [sessionEnded, setSessionEnded] = useState(false);
