@@ -19,13 +19,13 @@ interface RatingDialogProps {
   targetTime: number;
 }
 
-const ratingOptions: { value: SessionRating; label: string; color: string }[] = [
-  { value: 'easy', label: '😄 Easy Peasy', color: '#4CAF50' },
-  { value: 'not-bad', label: '🙂 Not Too Bad', color: '#8BC34A' },
-  { value: 'ok', label: '🙃 It is alright', color: '#2196F3' },
-  { value: 'hard', label: '😢 Belly is burning', color: '#FF9800' },
-  { value: 'superman', label: '💀 I\'m dead', color: '#F44336' }
-];
+import { ratings, ratingOrder } from '../constants/rating-emojis';
+
+const ratingOptions = ratingOrder.map(rating => ({
+  value: rating,
+  label: `${ratings[rating].emoji} ${ratings[rating].label}`,
+  color: ratings[rating].color
+}));
 
 export const RatingDialog: React.FC<RatingDialogProps> = ({
   open,

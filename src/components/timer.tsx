@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  IconButton,
-  Typography,
-  CircularProgress,
-  useTheme
-} from '@mui/material';
-import { RatingDialog } from './rating-dialog';
-import {
-  PlayArrow as PlayIcon,
-  Stop as StopIcon,
-  Refresh as ResetIcon
-} from '@mui/icons-material';
+import plankImage from '../assets/plank-image.png';
+import { Box, IconButton, Typography, CircularProgress, useTheme } from '@mui/material';
+import { QuickRating } from './quick-rating';
+import { PlayArrow as PlayIcon, Stop as StopIcon, Refresh as ResetIcon } from '@mui/icons-material';
 import { useTimer } from '../hooks/use-timer';
 
 export const Timer: React.FC = () => {
@@ -28,9 +19,15 @@ export const Timer: React.FC = () => {
     stopTimer,
     resetTimer,
     completeSession,
-    targetDuration
   } = useTimer();
-  const [showRating, setShowRating] = useState(false);
+  const [sessionEnded, setSessionEnded] = useState(false);
+
+  // Reset sessionEnded when timer becomes active
+  useEffect(() => {
+    if (isActive) {
+      setSessionEnded(false);
+    }
+  }, [isActive]);
 
   // Sound effects
   useEffect(() => {
@@ -38,15 +35,15 @@ export const Timer: React.FC = () => {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
+
       oscillator.frequency.value = frequency;
       oscillator.type = 'sine';
-      
+
       gainNode.gain.value = 0.1;
-      
+
       oscillator.start();
       setTimeout(() => {
         oscillator.stop();
@@ -83,14 +80,15 @@ export const Timer: React.FC = () => {
         justifyContent: 'center',
         position: 'relative',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        gap: 1,
       }}
     >
       <Box
         sx={{
           position: 'relative',
           display: 'inline-flex',
-          mb: 2
+          mb: 2,
         }}
       >
         <CircularProgress
@@ -122,71 +120,89 @@ export const Timer: React.FC = () => {
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', mt: 2 }}>
+      <Box sx={{ display: 'flex', mt: 2, mb: sessionEnded ? 2 : 0 }}>
         <IconButton
           onClick={() => {
             if (isActive) {
               stopTimer();
-              setShowRating(true);
+              setSessionEnded(true);
             } else if (!isActive && currentTime > 0) {
+              setSessionEnded(false);
               resetTimer();
             } else {
               // Start new session
               startTimer();
             }
           }}
-          color={isActive ? "error" : (!isActive && currentTime > 0 ? "warning" : "primary")}
+          color={isActive ? 'error' : !isActive && currentTime > 0 ? 'warning' : 'primary'}
           size="large"
-          sx={{ 
-            bgcolor: isActive 
-              ? 'error.main' 
-              : (!isActive && currentTime > 0 
-                  ? 'warning.main' 
-                  : 'primary.main'), 
-            color: 'white', 
+          sx={{
+            bgcolor: isActive
+              ? 'error.main'
+              : !isActive && currentTime > 0
+              ? 'warning.main'
+              : 'primary.main',
+            color: 'white',
             width: 80,
             height: 80,
             '& svg': {
-              fontSize: 40
+              fontSize: 40,
             },
-            '&:hover': { 
-              bgcolor: isActive 
-                ? 'error.dark' 
-                : (!isActive && currentTime > 0 
-                    ? 'warning.dark' 
-                    : 'primary.dark')
-            }
+            '&:hover': {
+              bgcolor: isActive
+                ? 'error.dark'
+                : !isActive && currentTime > 0
+                ? 'warning.dark'
+                : 'primary.dark',
+            },
           }}
         >
-          {isActive 
-            ? <StopIcon /> 
-            : (!isActive && currentTime > 0 
-                ? <ResetIcon /> 
-                : <PlayIcon />)}
+          {isActive ? <StopIcon /> : !isActive && currentTime > 0 ? <ResetIcon /> : <PlayIcon />}
         </IconButton>
       </Box>
 
-      {isTargetReached && (
-        <Typography
-          variant="h6"
-          color="success.main"
-          sx={{ mt: 2, fontWeight: 'bold' }}
-        >
-          Target Reached! Keep Going!
-        </Typography>
-      )}
-
-      <RatingDialog
-        open={showRating}
-        onClose={() => setShowRating(false)}
-        onRate={(rating) => {
-          completeSession(rating);
-          setShowRating(false);
+      <Box
+        sx={{
+          width: '100%',
+          height: '100px', // Fixed height container
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-        targetReached={isTargetReached}
-        sessionTime={currentTime}
-        targetTime={targetDuration}
-      />
+      >
+        {isActive && (
+          <Box
+            component="img"
+            src={plankImage}
+            alt="Plank position reference"
+            sx={{
+              width: '100%',
+              maxWidth: '500px',
+              height: '100px',
+              objectFit: 'contain',
+              mt: 1,
+            }}
+          />
+        )}
+
+        {isTargetReached && (
+          <Typography variant="h6" color="success.main" sx={{ fontWeight: 'bold' }}>
+            Target Reached! Keep Going!
+          </Typography>
+        )}
+
+        {sessionEnded && (
+          <Box sx={{ height: '100px', display: 'flex', alignItems: 'center', mt: 1 }}>
+            <QuickRating
+              onRate={(rating) => {
+                completeSession(rating);
+                setSessionEnded(false);
+              }}
+            />
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 };

@@ -1,0 +1,60 @@
+{
+  "state": {
+    "sessions": [
+      {
+        "id": "1737281864755",
+        "duration": 18,
+        "date": "2025-01-15T10:17:44.755Z",
+        "targetDuration": 60,
+        "targetReached": false,
+        "rating": "easy"
+      },
+      {
+        "id": "1737281864755",
+        "duration": 18,
+        "date": "2025-01-16T10:17:44.755Z",
+        "targetDuration": 60,
+        "targetReached": false,
+        "rating": "ok"
+      },
+      {
+        "id": "1737281864755",
+        "duration": 18,
+        "date": "2025-01-16T10:17:44.755Z",
+        "targetDuration": 60,
+        "targetReached": false,
+        "rating": "not-bad"
+      },
+      {
+        "id": "1737281864755",
+        "duration": 28,
+        "date": "2025-01-18T10:17:44.755Z",
+        "targetDuration": 60,
+        "targetReached": false,
+        "rating": "hard"
+      },
+      {
+        "id": "1737281864755",
+        "duration": 58,
+        "date": "2025-01-19T10:17:44.755Z",
+        "targetDuration": 60,
+        "targetReached": false,
+        "rating": "superman"
+      },
+      {
+        "id": "1737281864755",
+        "duration": 62,
+        "date": "2025-01-19T11:17:44.755Z",
+        "targetDuration": 60,
+        "targetReached": true,
+        "rating": "superman"
+      }
+    ],
+    "reminderSettings": { "enabled": true, "time": "09:00", "notificationsPermission": false },
+    "userProfile": { "name": "Grace" },
+    "isActive": false,
+    "currentTime": 0,
+    "stats": { "longestTime": 8, "longestStreak": 1, "currentStreak": 1, "lastWeekAverage": 8 }
+  },
+  "version": 0
+}

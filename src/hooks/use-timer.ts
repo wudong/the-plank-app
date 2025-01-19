@@ -2,34 +2,46 @@ import { useEffect, useCallback } from 'react';
 import { usePlankStore } from '../store/plank-store';
 
 export const useTimer = () => {
-  const { 
-    isActive, 
-    currentTime, 
-    startTimer, 
-    stopTimer, 
+  const {
+    isActive,
+    currentTime,
+    startTimer,
+    stopTimer,
     resetTimer,
     completeSession,
-    calculateTargetDuration
+    calculateTargetDuration,
   } = usePlankStore();
 
-  // Update timer every second when active
   useEffect(() => {
-    let intervalId: number;
+    let start: number;
+    let timeoutId: number;
+
+    const updateTimer = () => {
+      if (!isActive) return;
+
+      const elapsed = Math.floor((performance.now() - start) / 1000);
+      usePlankStore.setState({
+        currentTime: elapsed
+      });
+
+      // Schedule next update at the start of the next second
+      const nextUpdate = 1000 - ((performance.now() - start) % 1000);
+      timeoutId = window.setTimeout(updateTimer, nextUpdate);
+    };
 
     if (isActive) {
-      intervalId = window.setInterval(() => {
-        usePlankStore.setState(state => ({
-          currentTime: state.currentTime + 1
-        }));
-      }, 1000);
+      // Synchronize with the system clock
+      const now = performance.now();
+      start = now - (currentTime * 1000);
+      updateTimer();
     }
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
     };
-  }, [isActive]);
+  }, [isActive, currentTime]);
 
   const formatTime = useCallback((seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -57,6 +69,6 @@ export const useTimer = () => {
     resetTimer,
     completeSession,
     formatTime,
-    targetDuration
+    targetDuration,
   };
 };

@@ -53,7 +53,7 @@ export const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 19, // daisyUI --rounded-btn: 1.9rem
+    borderRadius: 2, // daisyUI --rounded-btn: 1.9rem
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',

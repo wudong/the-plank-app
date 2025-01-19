@@ -20,6 +20,10 @@ export interface PlankStats {
   longestStreak: number; // in days
   currentStreak: number; // in days
   lastWeekAverage: number; // in seconds
+  streakStartDate: string; // ISO date string for current streak start
+  streakEndDate: string; // ISO date string for current streak end
+  longestStreakStartDate: string; // ISO date string for longest streak start
+  longestStreakEndDate: string; // ISO date string for longest streak end
 }
 
 /**

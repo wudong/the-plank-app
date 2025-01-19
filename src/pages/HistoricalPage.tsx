@@ -1,28 +1,37 @@
+import { Container, Paper, Stack } from '@mui/material';
 import React from 'react';
-import {
-  Box,
-  Container,
-  Paper,
-  Typography,
-  useMediaQuery,
-  useTheme
-} from '@mui/material';
-import { ProgressChart } from '../components/progress-chart';
+import { CalendarView } from '../components/calendar-view';
+import { usePlankStore } from '../store/plank-store';
+import { SessionList } from '../components/session-list';
 
 export const HistoricalPage: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  const sessions = usePlankStore((state) => state.sessions);
+
+  const selectedDaySessions = React.useMemo(() => {
+    if (!selectedDate) return [];
+    return sessions.filter((session) => {
+      const sessionDate = new Date(session.date);
+      return (
+        sessionDate.getDate() === selectedDate.getDate() &&
+        sessionDate.getMonth() === selectedDate.getMonth() &&
+        sessionDate.getFullYear() === selectedDate.getFullYear()
+      );
+    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [selectedDate, sessions]);
 
   return (
-    <Container maxWidth="md" sx={{ py: 3 }}>
-      <Paper elevation={1} sx={{ p: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Historical Progress
-        </Typography>
-        <Box sx={{ mt: 2, height: isMobile ? 300 : 400 }}>
-          <ProgressChart />
-        </Box>
-      </Paper>
+    <Container maxWidth="md" sx={{ py: 2 }}>
+      <Stack spacing={3}>
+        <Paper elevation={1} sx={{ p: 2 }}>
+          <CalendarView onSelectDay={setSelectedDate} />
+        </Paper>
+        {selectedDate && (
+          <Paper elevation={1} sx={{ p: 2 }}>
+            <SessionList sessions={selectedDaySessions} date={selectedDate} />
+          </Paper>
+        )}
+      </Stack>
     </Container>
   );
 };

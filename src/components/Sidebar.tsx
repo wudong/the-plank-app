@@ -17,7 +17,6 @@ import {
   Button,
   TextField,
   IconButton,
-  Paper,
   useTheme
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
