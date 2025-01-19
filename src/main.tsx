@@ -4,6 +4,15 @@ import { ThemeProvider, CssBaseline, GlobalStyles } from '@mui/material';
 import { theme } from './theme';
 import { App } from './App';
 
+// Register PWA service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((error) => {
+      console.error('Service worker registration failed:', error);
+    });
+  });
+}
+
 // Global styles
 const globalStyles = {
   '*': {

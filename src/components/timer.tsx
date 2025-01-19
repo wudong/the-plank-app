@@ -1,8 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import plankImage from '../assets/plank-image.png';
-import { Box, IconButton, Typography, CircularProgress, useTheme } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Typography,
+  CircularProgress,
+  useTheme,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
+} from '@mui/material';
 import { QuickRating } from './quick-rating';
-import { PlayArrow as PlayIcon, Stop as StopIcon, Refresh as ResetIcon } from '@mui/icons-material';
+import {
+  PlayArrow as PlayIcon,
+  Stop as StopIcon,
+  Refresh as ResetIcon,
+  Flag as FlagIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material';
 import { useTimer } from '../hooks/use-timer';
 
 export const Timer: React.FC = () => {
@@ -18,8 +36,13 @@ export const Timer: React.FC = () => {
     startTimer,
     stopTimer,
     completeSession,
+    parseTimeInput,
+    setManualTarget,
   } = useTimer();
   const [sessionEnded, setSessionEnded] = useState(false);
+  const [isSettingTarget, setIsSettingTarget] = useState(false);
+  const [targetInput, setTargetInput] = useState(formattedTargetTime);
+  const [targetError, setTargetError] = useState('');
 
   // Reset sessionEnded when timer becomes active
   useEffect(() => {
@@ -63,6 +86,21 @@ export const Timer: React.FC = () => {
       }
     }
   }, [isActive, isHalfway, isTargetReached, currentTime]);
+
+  const handleTargetSubmit = () => {
+    const seconds = parseTimeInput(targetInput);
+    if (seconds === null) {
+      setTargetError('Please enter a valid time (mm:ss)');
+      return;
+    }
+    if (seconds < 10) {
+      setTargetError('Target must be at least 10 seconds');
+      return;
+    }
+    setManualTarget(seconds);
+    setIsSettingTarget(false);
+    setTargetError('');
+  };
 
   const getProgressColor = () => {
     if (isTargetReached) return theme.palette.success.main;
@@ -110,12 +148,39 @@ export const Timer: React.FC = () => {
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h3" component="div" color="text.primary">
+          <Typography variant="h2" component="div" color="text.primary" sx={{ fontSize: '5rem' }}>
             {formattedCurrentTime}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Target: {formattedTargetTime}
-          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              cursor: !isActive ? 'pointer' : 'default',
+              '&:hover': !isActive
+                ? {
+                    '& .MuiTypography-root': {
+                      textDecoration: 'underline',
+                    },
+                  }
+                : {},
+            }}
+            onClick={() => {
+              if (!isActive) {
+                setTargetInput(formattedTargetTime);
+                setIsSettingTarget(true);
+              }
+            }}
+          >
+            {/* <FlagIcon sx={{ color: 'text.secondary', fontSize: '2rem' }} /> */}
+            <Typography variant="body2" sx={{ fontSize: '1.5rem' }}>
+              🎯
+            </Typography>
+            <Typography variant="h6" color="text.secondary" sx={{ fontSize: '1.5rem', ml: 0.5 }}>
+              {formattedTargetTime}
+            </Typography>
+            {!isActive && <EditIcon sx={{ color: 'text.secondary', fontSize: '1rem' }} />}
+          </Box>
         </Box>
       </Box>
 
@@ -203,6 +268,40 @@ export const Timer: React.FC = () => {
           </Box>
         )}
       </Box>
+
+      <Dialog open={isSettingTarget} onClose={() => setIsSettingTarget(false)}>
+        <DialogTitle>Set Target Time</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Target Time (mm:ss)"
+            fullWidth
+            variant="outlined"
+            value={targetInput}
+            onChange={(e) => {
+              setTargetInput(e.target.value);
+              setTargetError('');
+            }}
+            error={!!targetError}
+            helperText={targetError}
+            placeholder="1:30"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setManualTarget(null);
+              setIsSettingTarget(false);
+              setTargetError('');
+            }}
+          >
+            Reset to Auto
+          </Button>
+          <Button onClick={() => setIsSettingTarget(false)}>Cancel</Button>
+          <Button onClick={handleTargetSubmit}>Set Target</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

@@ -27,6 +27,7 @@ interface PlankState {
   isActive: boolean;
   currentTime: number;
   timerStartTime: number | null;
+  manualTarget: number | null;
 
   // Computed stats
   stats: PlankStats;
@@ -42,6 +43,7 @@ interface PlankState {
   getProgressData: (aggregation: TimeAggregation) => ProgressDataPoint[];
   calculateTargetDuration: () => number;
   requestNotificationPermission: () => Promise<void>;
+  setManualTarget: (target: number | null) => void;
 }
 
 const calculateStats = (sessions: PlankSession[]): PlankStats => {
@@ -158,6 +160,7 @@ export const usePlankStore = create<PlankState>()(
       isActive: false,
       currentTime: 0,
       timerStartTime: null,
+      manualTarget: null,
       stats: {
         longestTime: 0,
         longestStreak: 0,
@@ -230,11 +233,19 @@ export const usePlankStore = create<PlankState>()(
 
       getProgressData: (aggregation) => aggregateData(get().sessions, aggregation),
 
-      calculateTargetDuration: () =>
-        Math.max(
-          get().stats.lastWeekAverage,
+      calculateTargetDuration: () => {
+        const state = get();
+        if (state.manualTarget !== null) {
+          return state.manualTarget;
+        }
+        return Math.max(
+          state.stats.lastWeekAverage,
           60 // minimum target of 60 seconds
-        ),
+        );
+      },
+
+      setManualTarget: (target: number | null) => 
+        set({ manualTarget: target }),
 
       requestNotificationPermission: async () => {
         if ('Notification' in window) {
@@ -272,6 +283,7 @@ export const usePlankStore = create<PlankState>()(
             longestStreakStartDate: '',
             longestStreakEndDate: '',
           },
+          manualTarget: null,
         }),
     }),
     {

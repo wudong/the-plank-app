@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added manual target time setting by clicking on target display in Timer component
 - Calendar view in Historical page showing plank sessions with dots
 - Grid-based calendar layout with visual indicators for days with sessions
 - Month and year display at the top of calendar
@@ -17,6 +18,7 @@
 
 ### Changed
 
+- Enhanced timer display with larger text sizes and improved target time UI with flag and edit icons
 - Refactored streak calculation into a separate compute-streak module for improved maintainability and reusability
 - Replaced rating dialog with inline quick rating buttons for faster session rating
 - Made session list more compact by reducing spacing and using smaller typography

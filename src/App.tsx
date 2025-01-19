@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { usePlankStore } from './store/plank-store';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography
-} from '@mui/material';
-import {
-  Menu as MenuIcon,
-  Download as DownloadIcon
-} from '@mui/icons-material';
+import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { Menu as MenuIcon, Download as DownloadIcon } from '@mui/icons-material';
 
 import { MainPage } from './pages/MainPage';
 import { HistoricalPage } from './pages/HistoricalPage';
@@ -23,7 +14,7 @@ const AppContent: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const userProfile = usePlankStore(state => state.userProfile);
+  const userProfile = usePlankStore((state) => state.userProfile);
 
   // Handle PWA installation
   useEffect(() => {
@@ -44,7 +35,7 @@ const AppContent: React.FC = () => {
 
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    
+
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
     }
@@ -69,15 +60,15 @@ const AppContent: React.FC = () => {
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppBar 
-        position="fixed" 
-        elevation={0}
+      <AppBar
+        position="fixed"
+        elevation={1}
         sx={{
           background: (theme) => theme.palette.primary.main,
           // Add safe area insets padding
           paddingTop: 'env(safe-area-inset-top)',
           paddingLeft: 'env(safe-area-inset-left)',
-          paddingRight: 'env(safe-area-inset-right)'
+          paddingRight: 'env(safe-area-inset-right)',
         }}
       >
         <Toolbar
@@ -86,7 +77,7 @@ const AppContent: React.FC = () => {
             paddingLeft: { xs: 1, sm: 2 },
             paddingRight: { xs: 1, sm: 2 },
             // Ensure content is below the notch
-            marginTop: { xs: 1, sm: 0 }
+            marginTop: { xs: 1, sm: 0 },
           }}
         >
           <IconButton
@@ -96,13 +87,13 @@ const AppContent: React.FC = () => {
             sx={{
               // Ensure the menu icon is properly positioned and clickable
               position: 'relative',
-              zIndex: 1
+              zIndex: 1,
             }}
           >
             <MenuIcon />
           </IconButton>
-          
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, marginLeft: 4 }}>
+
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 1 }}>
             Plank Timer
           </Typography>
 
@@ -110,7 +101,7 @@ const AppContent: React.FC = () => {
             <IconButton color="inherit" onClick={handleInstall}>
               <DownloadIcon />
             </IconButton>
-          )}          
+          )}
         </Toolbar>
       </AppBar>
 
@@ -129,10 +120,7 @@ const AppContent: React.FC = () => {
         </Routes>
       </Box>
 
-      <SettingsDialog
-        open={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
+      <SettingsDialog open={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </Box>
   );
 };
