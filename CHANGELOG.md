@@ -32,7 +32,7 @@
 
 ### Fixed
 
-- Fixed service worker registration by implementing custom service worker with proper caching strategies and MIME type handling
+- Fixed service worker registration by using built-in Vite PWA plugin functionality
 - Calendar view now correctly shows target reached status when any session in a day reaches the target
 - Fixed border styling for current day to highlight all four sides
 - Fixed rating dialog appearing during active sessions by properly synchronizing session end state
