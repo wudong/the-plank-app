@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added 30-day session duration line chart with daily averages in Historical page
+- Added day/week/month filtering tabs in Historical page for better session analysis
 - Added manual target time setting by clicking on target display in Timer component
 - Calendar view in Historical page showing plank sessions with dots
 - Grid-based calendar layout with visual indicators for days with sessions
@@ -18,11 +20,14 @@
 
 ### Changed
 
+- Redesigned Historical page with tabs to switch between calendar view and 30-day trend chart
+- Simplified session view by removing detailed session list
 - Enhanced timer display with larger text sizes and improved target time UI with flag and edit icons
 - Refactored streak calculation into a separate compute-streak module for improved maintainability and reusability
 - Replaced rating dialog with inline quick rating buttons for faster session rating
 - Made session list more compact by reducing spacing and using smaller typography
 - Redesigned Historical page layout with calendar view at the top and session details below
+- Removed redundant session date header for cleaner Historical page UI
 - Renamed "Historical Progress" section to "Trend Analysis"
 - Improved spacing and padding in Historical page components
 - Enhanced calendar view visualization:
@@ -31,9 +36,11 @@
   - Fixed right border styling consistency in calendar grid
 - Refactored session list in Historical page into a separate reusable component
 - Improved QuickRating component with consistent button alignment and fixed-height labels
+- Made session list scrollable within its container instead of scrolling the entire page
 
 ### Fixed
 
+- Fixed current day highlighting in calendar to properly update when the date changes
 - Fixed service worker registration by using built-in Vite PWA plugin functionality
 - Calendar view now correctly shows target reached status when any session in a day reaches the target
 - Fixed border styling for current day to highlight all four sides

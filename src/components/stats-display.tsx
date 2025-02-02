@@ -1,23 +1,16 @@
 import React from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  useTheme
-} from '@mui/material';
+import { Box, Card, CardContent, Typography, Grid, useTheme } from '@mui/material';
 import {
   Timeline as TimelineIcon,
   LocalFireDepartment as StreakIcon,
-  Star as StarIcon
+  Star as StarIcon,
 } from '@mui/icons-material';
 import { usePlankStore } from '../store/plank-store';
 import { useTimer } from '../hooks/use-timer';
 
 export const StatsDisplay: React.FC = () => {
   const theme = useTheme();
-  const stats = usePlankStore(state => state.stats);
+  const stats = usePlankStore((state) => state.stats);
   const { formatTime } = useTimer();
 
   const statItems = [
@@ -25,22 +18,23 @@ export const StatsDisplay: React.FC = () => {
       label: 'Longest Time',
       value: `${formatTime(stats.longestTime)} `,
       icon: TimelineIcon,
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
     },
     {
       label: 'Longest Streak',
       value: `${stats.longestStreak} d`,
       icon: StarIcon,
-      color: theme.palette.warning.main
+      color: theme.palette.warning.main,
     },
     {
       label: 'Current Streak',
       value: `${stats.currentStreak} d`,
       icon: StreakIcon,
-      color: stats.currentStreak >= stats.longestStreak
-        ? theme.palette.success.main
-        : theme.palette.info.main
-    }
+      color:
+        stats.currentStreak >= stats.longestStreak
+          ? theme.palette.success.main
+          : theme.palette.info.main,
+    },
   ];
 
   return (
@@ -57,8 +51,8 @@ export const StatsDisplay: React.FC = () => {
               p: 2,
               transition: 'transform 0.2s',
               '&:hover': {
-                transform: 'scale(1.02)'
-              }
+                transform: 'scale(1.02)',
+              },
             }}
           >
             <Box
@@ -70,13 +64,12 @@ export const StatsDisplay: React.FC = () => {
                 height: 48,
                 borderRadius: '50%',
                 bgcolor: `${stat.color}15`,
-                mb: 1
               }}
             >
               <stat.icon
                 sx={{
                   color: stat.color,
-                  fontSize: 28
+                  fontSize: 28,
                 }}
               />
             </Box>
@@ -86,18 +79,12 @@ export const StatsDisplay: React.FC = () => {
                 component="div"
                 sx={{
                   fontWeight: 'bold',
-                  color: stat.color
+                  color: stat.color,
                 }}
               >
                 {stat.value}
               </Typography>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                sx={{ mt: 0.5 }}
-              >
-                {stat.label}
-              </Typography>
+              <Typography color="text.secondary">{stat.label}</Typography>
             </CardContent>
           </Card>
         </Grid>

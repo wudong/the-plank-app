@@ -3,9 +3,12 @@ import React from 'react';
 import { PlankSession } from '../types/plank';
 import { ratings } from '../constants/rating-emojis';
 
+type ViewMode = 'day' | 'week' | 'month';
+
 interface SessionListProps {
   sessions: PlankSession[];
   date: Date;
+  viewMode: ViewMode;
 }
 
 const formatDuration = (seconds: number) => {
@@ -14,16 +17,32 @@ const formatDuration = (seconds: number) => {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-export const SessionList: React.FC<SessionListProps> = ({ sessions, date }) => {
+const getHeaderText = (viewMode: ViewMode, date: Date) => {
+  switch (viewMode) {
+    case 'day':
+      return `${date.toLocaleDateString()}`;
+    case 'week': {
+      const weekStart = new Date(date);
+      weekStart.setDate(date.getDate() - date.getDay());
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      return `Week of ${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()}`;
+    }
+    case 'month':
+      return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  }
+};
+
+export const SessionList: React.FC<SessionListProps> = ({ sessions, date, viewMode }) => {
   const theme = useTheme();
 
   return (
-    <>
+    <Stack sx={{ height: '100%', overflow: 'hidden', minHeight: 0 }}>
       <Typography variant="subtitle1" sx={{ mb: 1 }}>
-        Sessions for {date.toLocaleDateString()}
+        {getHeaderText(viewMode, date)}
       </Typography>
       {sessions.length > 0 ? (
-        <List dense sx={{ py: 0 }}>
+        <List dense sx={{ py: 0, overflow: 'auto', minHeight: 0 }}>
           {sessions.map((session, index) => (
             <React.Fragment key={session.id}>
               <ListItem sx={{ py: 0.5 }}>
@@ -32,6 +51,7 @@ export const SessionList: React.FC<SessionListProps> = ({ sessions, date }) => {
                   primary={
                     <Stack direction="row" spacing={1} alignItems="center">
                       <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
+                        {new Date(session.date).toLocaleDateString()}{' '}
                         {new Date(session.date).toLocaleTimeString()} -{' '}
                         {formatDuration(session.duration)}
                       </Typography>
@@ -49,9 +69,9 @@ export const SessionList: React.FC<SessionListProps> = ({ sessions, date }) => {
         </List>
       ) : (
         <Typography variant="body2" color="text.secondary" sx={{ py: 1, textAlign: 'center' }}>
-          No Session So Far
+          No Sessions for This {viewMode.charAt(0).toUpperCase() + viewMode.slice(1)}
         </Typography>
       )}
-    </>
+    </Stack>
   );
 };

@@ -30,7 +30,7 @@ const DayCell: React.FC<DayProps> = ({
   const theme = useTheme();
 
   const handleClick = () => {
-    if (hasSession && onClick) {
+    if (onClick) {
       onClick(date);
     }
   };
@@ -52,7 +52,7 @@ const DayCell: React.FC<DayProps> = ({
             : 'background.paper'
           : 'action.disabledBackground',
         opacity: isCurrentMonth ? 1 : 0.5,
-        cursor: hasSession ? 'pointer' : 'default',
+        cursor: 'pointer',
         border:
           selectedDate &&
           date.getDate() === selectedDate.getDate() &&
@@ -91,14 +91,27 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ onSelectDay }) => {
   const sessions = usePlankStore((state) => state.sessions);
   const theme = useTheme();
   const [currentDate, setCurrentDate] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  const [today, setToday] = React.useState(new Date());
 
   React.useEffect(() => {
-    // Trigger the callback with today's date on mount
-    if (onSelectDay) {
-      onSelectDay(new Date());
-    }
-  }, [onSelectDay]);
+    // Keep today's date up to date
+    const timer = setInterval(() => {
+      const now = new Date();
+      // Check if the date has changed (including month and year)
+      if (
+        today.getDate() !== now.getDate() ||
+        today.getMonth() !== now.getMonth() ||
+        today.getFullYear() !== now.getFullYear()
+      ) {
+        setToday(now);
+        // Force a re-render with the new date
+        setCurrentDate(new Date(now));
+      }
+    }, 1000 * 60); // Check every minute
+
+    return () => clearInterval(timer);
+  }, [today]);
 
   const handleSelectDay = (date: Date) => {
     setSelectedDate(date);
@@ -109,15 +122,14 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ onSelectDay }) => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
   };
 
-  const today = new Date();
-  const isNextMonthFuture = useMemo(() => {
-    const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
-    return nextMonth > new Date(today.getFullYear(), today.getMonth());
-  }, [currentDate]);
+  const nextMonth = useMemo(
+    () => new Date(currentDate.getFullYear(), currentDate.getMonth() + 1),
+    [currentDate]
+  );
 
   const handleNextMonth = () => {
-    if (!isNextMonthFuture) {
-      setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+    if (nextMonth <= new Date()) {
+      setCurrentDate(nextMonth);
     }
   };
 
@@ -255,8 +267,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ onSelectDay }) => {
         <Box
           onClick={handleNextMonth}
           sx={{
-            cursor: isNextMonthFuture ? 'not-allowed' : 'pointer',
-            opacity: isNextMonthFuture ? 0.5 : 1,
+            cursor: nextMonth > new Date() ? 'not-allowed' : 'pointer',
+            opacity: nextMonth > new Date() ? 0.5 : 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
