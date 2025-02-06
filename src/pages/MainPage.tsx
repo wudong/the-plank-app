@@ -11,7 +11,7 @@ export const MainPage: React.FC = () => {
       maxWidth="md"
       sx={{
         flexGrow: 1,
-        py: 3,
+        py: 0,
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -21,7 +21,7 @@ export const MainPage: React.FC = () => {
       <Box
         sx={{
           flex: 1,
-          mb: 3,
+          mb: 2,
           display: 'flex',
           width: '100%',
           minHeight: 0,

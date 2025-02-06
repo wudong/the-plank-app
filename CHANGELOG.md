@@ -20,6 +20,11 @@
 
 ### Changed
 
+- Improved target time input with mobile-friendly spinners and separate minute/second controls
+- Added touch-friendly increment/decrement buttons for time adjustment
+- Enhanced time input validation with clear visual feedback
+- Improved numeric input styling with larger touch targets
+
 - Redesigned Historical page with tabs to switch between calendar view and 30-day trend chart
 - Simplified session view by removing detailed session list
 - Enhanced timer display with larger text sizes and improved target time UI with flag and edit icons

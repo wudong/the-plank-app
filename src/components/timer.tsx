@@ -20,6 +20,8 @@ import {
   Refresh as ResetIcon,
   Flag as FlagIcon,
   Edit as EditIcon,
+  Add as AddIcon,
+  Remove as RemoveIcon,
 } from '@mui/icons-material';
 import { useTimer } from '../hooks/use-timer';
 
@@ -272,21 +274,140 @@ export const Timer: React.FC = () => {
       <Dialog open={isSettingTarget} onClose={() => setIsSettingTarget(false)}>
         <DialogTitle>Set Target Time</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Target Time (mm:ss)"
-            fullWidth
-            variant="outlined"
-            value={targetInput}
-            onChange={(e) => {
-              setTargetInput(e.target.value);
-              setTargetError('');
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              alignItems: 'center',
+              justifyContent: 'center',
+              my: 2,
             }}
-            error={!!targetError}
-            helperText={targetError}
-            placeholder="1:30"
-          />
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Typography variant="caption" color="text.secondary">
+                Minutes
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                  onClick={() => {
+                    const [min, sec] = targetInput.split(':').map(Number);
+                    if (min > 0) {
+                      setTargetInput(
+                        `${String(min - 1).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+                      );
+                      setTargetError('');
+                    }
+                  }}
+                >
+                  <RemoveIcon />
+                </IconButton>
+                <TextField
+                  variant="outlined"
+                  type="number"
+                  size="small"
+                  inputProps={{
+                    min: 0,
+                    max: 59,
+                    style: {
+                      textAlign: 'center',
+                      width: '60px',
+                      fontSize: '1.5rem',
+                      padding: '8px',
+                    },
+                  }}
+                  value={targetInput.split(':')[0]}
+                  onChange={(e) => {
+                    const newMin = Math.min(Math.max(0, Number(e.target.value)), 59);
+                    const sec = targetInput.split(':')[1];
+                    setTargetInput(`${String(newMin).padStart(2, '0')}:${sec}`);
+                    setTargetError('');
+                  }}
+                />
+                <IconButton
+                  onClick={() => {
+                    const [min, sec] = targetInput.split(':').map(Number);
+                    if (min < 59) {
+                      setTargetInput(
+                        `${String(min + 1).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+                      );
+                      setTargetError('');
+                    }
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Box>
+            </Box>
+
+            <Typography variant="h4" color="text.secondary">
+              :
+            </Typography>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Typography variant="caption" color="text.secondary">
+                Seconds
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                  onClick={() => {
+                    const [min, sec] = targetInput.split(':').map(Number);
+                    if (sec > 0) {
+                      setTargetInput(
+                        `${String(min).padStart(2, '0')}:${String(sec - 1).padStart(2, '0')}`
+                      );
+                      setTargetError('');
+                    }
+                  }}
+                >
+                  <RemoveIcon />
+                </IconButton>
+                <TextField
+                  variant="outlined"
+                  type="number"
+                  size="small"
+                  inputProps={{
+                    min: 0,
+                    max: 59,
+                    style: {
+                      textAlign: 'center',
+                      width: '60px',
+                      fontSize: '1.5rem',
+                      padding: '8px',
+                    },
+                  }}
+                  value={targetInput.split(':')[1]}
+                  onChange={(e) => {
+                    const newSec = Math.min(Math.max(0, Number(e.target.value)), 59);
+                    const min = targetInput.split(':')[0];
+                    setTargetInput(`${min}:${String(newSec).padStart(2, '0')}`);
+                    setTargetError('');
+                  }}
+                />
+                <IconButton
+                  onClick={() => {
+                    const [min, sec] = targetInput.split(':').map(Number);
+                    if (sec < 59) {
+                      setTargetInput(
+                        `${String(min).padStart(2, '0')}:${String(sec + 1).padStart(2, '0')}`
+                      );
+                      setTargetError('');
+                    }
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Box>
+            </Box>
+          </Box>
+          {targetError && (
+            <Typography
+              color="error"
+              variant="caption"
+              sx={{ display: 'block', textAlign: 'center', mt: 1 }}
+            >
+              {targetError}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button
