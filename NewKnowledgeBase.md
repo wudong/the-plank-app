@@ -12,6 +12,10 @@
 - Implementing Google Sign-In with Supabase is straightforward using the signInWithOAuth method
 - When using Google Sign-In, it's important to handle the redirect flow properly, especially in a PWA context
 - The redirectTo option in signInWithOAuth should be set to the application's origin to ensure proper redirect after authentication
+- User metadata from Google Sign-In (like name and avatar) can be accessed via the session.user.user_metadata object
+- Updating user profile information should be done both in the local store and in Supabase to keep data in sync
+- It's important to handle cases where Google Sign-In metadata might be undefined or null to prevent errors
+- The App component is a good place to set up auth state listeners and perform initial user profile updates
 
 ## Calendar Implementation Insights
 

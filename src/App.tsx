@@ -132,8 +132,12 @@ export const App: React.FC = () => {
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       const store = usePlankStore.getState();
+      if (session?.user) {
+        const { user_metadata } = session.user;
+        await store.updateUserProfile(user_metadata.full_name, user_metadata.avatar_url);
+      }
       store.setUser(session?.user ?? null);
     });
 

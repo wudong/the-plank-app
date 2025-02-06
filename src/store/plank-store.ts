@@ -48,7 +48,7 @@ interface PlankState extends AuthState {
   resetTimer: () => void;
   completeSession: (rating?: SessionRating) => void;
   updateReminderSettings: (settings: Partial<ReminderSettings>) => void;
-  updateUserProfile: (profile: Partial<UserProfile>) => void;
+  updateUserProfile: (name: string, avatar: string) => Promise<void>;
   getProgressData: (aggregation: TimeAggregation) => ProgressDataPoint[];
   calculateTargetDuration: () => number;
   requestNotificationPermission: () => Promise<void>;
@@ -237,10 +237,20 @@ export const usePlankStore = create<PlankState>()(
           reminderSettings: { ...state.reminderSettings, ...settings },
         })),
 
-      updateUserProfile: (profile) =>
+      updateUserProfile: async (name: string, avatar: string) => {
         set((state) => ({
-          userProfile: { ...state.userProfile, ...profile },
-        })),
+          userProfile: {
+            ...state.userProfile,
+            name: name || state.userProfile.name,
+            avatar: avatar || state.userProfile.avatar,
+          },
+        }));
+
+        // Update Supabase user metadata
+        await supabase.auth.updateUser({
+          data: { name, avatar },
+        });
+      },
 
       getProgressData: (aggregation) => aggregateData(get().sessions, aggregation),
 
@@ -283,6 +293,15 @@ export const usePlankStore = create<PlankState>()(
             },
           });
           if (error) throw error;
+
+          // Fetch user data after successful authentication
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          if (user) {
+            const { user_metadata } = user;
+            await get().updateUserProfile(user_metadata.full_name, user_metadata.avatar_url);
+          }
         } finally {
           set({ loading: false });
         }

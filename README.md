@@ -14,6 +14,7 @@ This project is a plank logging application built with React, TypeScript, and Vi
 - Streak calculations to track consecutive days of planks
 - Simple design focusing on clarity and usability
 - Service worker registration for offline PWA functionality
+- User authentication with email/password and Google Sign-In
 
 ## Technologies
 
@@ -22,6 +23,7 @@ This project is a plank logging application built with React, TypeScript, and Vi
 - Vite for development and bundling
 - ESLint & Prettier for consistent code style
 - MUI (Material-UI) for some UI components
+- Supabase for authentication and data storage
 
 ## Getting Started
 
@@ -31,25 +33,46 @@ This project is a plank logging application built with React, TypeScript, and Vi
    pnpm install
    ```
 
-2. Run the local development server:
+2. Set up your Supabase project and add the following environment variables to a `.env.local` file:
+
+   ```
+   VITE_SUPABASE_URL=your_supabase_project_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+3. Run the local development server:
 
    ```
    pnpm dev
    ```
 
-3. Open your browser at the provided local URL (usually http://127.0.0.1:5173/ by default).
+4. Open your browser at the provided local URL (usually http://127.0.0.1:5173/ by default).
 
-4. Build for production:
+5. Build for production:
 
    ```
    pnpm build
    ```
 
-5. Preview the production build locally:
+6. Preview the production build locally:
 
    ```
    pnpm preview
    ```
+
+## Setting up Google Sign-In
+
+1. Go to your Supabase project settings (https://supabase.com/dashboard)
+2. Navigate to Authentication > Providers
+3. Enable Google provider
+4. Set up OAuth credentials in Google Cloud Console (https://console.cloud.google.com/):
+   - Create a new project or use an existing one
+   - Go to APIs & Services > Credentials
+   - Create OAuth 2.0 Client ID (Web application type)
+   - Add authorized JavaScript origins (your app's URL)
+   - Add authorized redirect URIs (your Supabase project URL + /auth/v1/callback)
+5. Copy the Client ID and Client Secret from Google Cloud Console
+6. Paste these credentials in your Supabase Google provider settings
 
 ## Directory Structure
 

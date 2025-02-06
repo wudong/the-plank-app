@@ -82,12 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const handleSaveProfile = () => {
-    updateUserProfile({
-      name: editProfile.name,
-      age: editProfile.age,
-      gender: editProfile.gender,
-      avatar: editProfile.avatar,
-    });
+    updateUserProfile(editProfile.name, editProfile.avatar);
     setEditProfileOpen(false);
   };
 

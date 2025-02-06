@@ -10,6 +10,13 @@
 - Added auth state management in plank store
 - Added auth-related UI elements in sidebar (sign in/sign out buttons)
 - Added loading states for auth operations
+- Implemented automatic user profile update on Google Sign-In
+- Updated App component to handle auth state changes and update user profile
+
+### Changed
+
+- Modified updateUserProfile method in plank store to accept name and avatar separately
+- Updated Sidebar component to use the new updateUserProfile method signature
 
 - Added 30-day session duration line chart with daily averages in Historical page
 - Added day/week/month filtering tabs in Historical page for better session analysis
