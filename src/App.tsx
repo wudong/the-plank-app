@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { usePlankStore } from './store/plank-store';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { supabase } from './lib/supabase';
 import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import { Menu as MenuIcon, Download as DownloadIcon } from '@mui/icons-material';
 
@@ -126,9 +128,25 @@ const AppContent: React.FC = () => {
 };
 
 export const App: React.FC = () => {
+  // Set up auth listener
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      const store = usePlankStore.getState();
+      store.setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <SessionContextProvider supabaseClient={supabase}>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </SessionContextProvider>
   );
 };

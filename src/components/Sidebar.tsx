@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { usePlankStore } from '../store/plank-store';
-import { 
-  Drawer, 
-  Box, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  ListItemIcon, 
-  Avatar, 
-  Typography, 
+import {
+  Drawer,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Avatar,
+  Typography,
   Divider,
   Dialog,
   DialogTitle,
@@ -17,13 +17,17 @@ import {
   Button,
   TextField,
   IconButton,
-  useTheme
+  useTheme,
+  CircularProgress,
 } from '@mui/material';
+import { AuthDialog } from './auth-dialog';
 import EditIcon from '@mui/icons-material/Edit';
 import TimerIcon from '@mui/icons-material/Timer';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 interface SidebarProps {
   open: boolean;
@@ -33,31 +37,33 @@ interface SidebarProps {
   userAvatar?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ 
-  open, 
-  onClose, 
+const Sidebar: React.FC<SidebarProps> = ({
+  open,
+  onClose,
   onMenuItemClick,
   userName = 'User',
   userAvatar = '/default-avatar.png',
 }) => {
   const theme = useTheme();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const { user, loading, signOut } = usePlankStore();
   const [cleanDataDialogOpen, setCleanDataDialogOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [editProfile, setEditProfile] = useState({
     name: userName,
     age: '',
     gender: '',
-    avatar: userAvatar
+    avatar: userAvatar,
   });
 
-  const updateUserProfile = usePlankStore(state => state.updateUserProfile);
-  
+  const updateUserProfile = usePlankStore((state) => state.updateUserProfile);
+
   const handleCleanDataClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent drawer from closing
     setCleanDataDialogOpen(true);
   };
 
-  const handleConfirmCleanData = useCallback(() => {        
+  const handleConfirmCleanData = useCallback(() => {
     setCleanDataDialogOpen(false);
     usePlankStore.getState().reset();
     onClose();
@@ -80,77 +86,84 @@ const Sidebar: React.FC<SidebarProps> = ({
       name: editProfile.name,
       age: editProfile.age,
       gender: editProfile.gender,
-      avatar: editProfile.avatar
+      avatar: editProfile.avatar,
     });
     setEditProfileOpen(false);
   };
 
   return (
     <>
-      <Drawer
-        anchor="left"
-        open={open}
-        onClose={onClose}
-      >
-        <Box
-          sx={{ width: 250 }}
-          role="presentation"
-        >
-          
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              position: 'relative', 
+      <Drawer anchor="left" open={open} onClose={onClose}>
+        <Box sx={{ width: 250 }} role="presentation">
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              position: 'relative',
               my: 4,
-            }}>
-              <Avatar 
-                src={userAvatar}
-                sx={{ 
-                  width: 80, 
-                  height: 80, 
-                  mb: 1,
-                  border: `3px solid ${theme.palette.background.paper}`,
-                  boxShadow: theme.shadows[3],
-                  backgroundColor: theme.palette.secondary.light
+            }}
+          >
+            <Avatar
+              src={userAvatar}
+              sx={{
+                width: 80,
+                height: 80,
+                mb: 1,
+                border: `3px solid ${theme.palette.background.paper}`,
+                boxShadow: theme.shadows[3],
+                backgroundColor: theme.palette.secondary.light,
+              }}
+            >
+              {userName?.charAt(0).toUpperCase()}
+            </Avatar>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 500,
                 }}
               >
-                {userName?.charAt(0).toUpperCase()}
-              </Avatar>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography 
-                  variant="h6" 
-                  sx={{                     
-                    fontWeight: 500
-                  }}
-                >                
-                  {userName}
-                  
-                </Typography>
-                <IconButton 
-                  size="small" 
-                  sx={{ ml: 1 }}
-                  onClick={handleEditProfile}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              </Box>
+                {userName}
+              </Typography>
+              <IconButton size="small" sx={{ ml: 1 }} onClick={handleEditProfile}>
+                <EditIcon fontSize="small" />
+              </IconButton>
             </Box>
+          </Box>
           <Divider />
           <List>
-            <ListItem button onClick={() => { onMenuItemClick('/'); onClose(); }}>
+            <ListItem
+              button
+              onClick={() => {
+                onMenuItemClick('/');
+                onClose();
+              }}
+            >
               <ListItemIcon>
                 <TimerIcon />
               </ListItemIcon>
               <ListItemText primary="Timer" />
             </ListItem>
-            <ListItem button onClick={() => { onMenuItemClick('/historical'); onClose(); }}>
+            <ListItem
+              button
+              onClick={() => {
+                onMenuItemClick('/historical');
+                onClose();
+              }}
+            >
               <ListItemIcon>
                 <BarChartIcon />
               </ListItemIcon>
               <ListItemText primary="Historical Progress" />
             </ListItem>
-            <ListItem button onClick={() => { onMenuItemClick('settings'); onClose(); }}>
+            <ListItem
+              button
+              onClick={() => {
+                onMenuItemClick('settings');
+                onClose();
+              }}
+            >
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
@@ -163,6 +176,29 @@ const Sidebar: React.FC<SidebarProps> = ({
               </ListItemIcon>
               <ListItemText primary="Clean Data" />
             </ListItem>
+            <Divider sx={{ my: 1 }} />
+            {loading ? (
+              <ListItem>
+                <ListItemIcon>
+                  <CircularProgress size={24} />
+                </ListItemIcon>
+                <ListItemText primary="Loading..." />
+              </ListItem>
+            ) : user ? (
+              <ListItem button onClick={signOut}>
+                <ListItemIcon>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary="Sign Out" />
+              </ListItem>
+            ) : (
+              <ListItem button onClick={() => setAuthDialogOpen(true)}>
+                <ListItemIcon>
+                  <LoginIcon />
+                </ListItemIcon>
+                <ListItemText primary="Sign In" />
+              </ListItem>
+            )}
           </List>
         </Box>
       </Drawer>
@@ -172,9 +208,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         onClose={handleCloseDialog}
         aria-labelledby="clean-data-dialog-title"
       >
-        <DialogTitle id="clean-data-dialog-title">
-          Clean All Data
-        </DialogTitle>
+        <DialogTitle id="clean-data-dialog-title">Clean All Data</DialogTitle>
         <DialogContent>
           Are you sure you want to clean all data and restart? This action cannot be undone.
         </DialogContent>
@@ -234,6 +268,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <AuthDialog open={authDialogOpen} onClose={() => setAuthDialogOpen(false)} />
     </>
   );
 };

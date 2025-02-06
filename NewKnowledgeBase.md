@@ -1,5 +1,18 @@
 # New Knowledge Base
 
+## Supabase Authentication Integration Insights
+
+- Zustand can be extended with auth state by using the persist middleware to maintain login state across refreshes
+- Auth state should be centralized in the store rather than using context for simpler state management
+- SessionContextProvider from Supabase is useful for auth helpers but not necessary for basic auth flow
+- Using onAuthStateChange listener in App component ensures auth state is always in sync with Supabase
+- Prefer async/await with proper error handling in auth methods over promise chains
+- Loading states should be managed at the store level to provide consistent UI feedback
+- TypeScript types from @supabase/supabase-js can be reused to ensure type safety in auth-related code
+- Implementing Google Sign-In with Supabase is straightforward using the signInWithOAuth method
+- When using Google Sign-In, it's important to handle the redirect flow properly, especially in a PWA context
+- The redirectTo option in signInWithOAuth should be set to the application's origin to ensure proper redirect after authentication
+
 ## Calendar Implementation Insights
 
 - MUI Grid system can be replaced with CSS Grid (display: grid) for more precise control over calendar layouts

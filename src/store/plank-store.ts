@@ -8,6 +8,8 @@ import {
   ProgressDataPoint,
   SessionRating,
 } from '../types/plank';
+import { AuthState } from '../types/auth';
+import { supabase } from '../lib/supabase';
 import { computeStreak } from '../models/compute-streak';
 
 interface UserProfile {
@@ -17,7 +19,7 @@ interface UserProfile {
   avatar?: string;
 }
 
-interface PlankState {
+interface PlankState extends AuthState {
   // Data
   sessions: PlankSession[];
   reminderSettings: ReminderSettings;
@@ -32,7 +34,14 @@ interface PlankState {
   // Computed stats
   stats: PlankStats;
 
-  // Actions
+  // Auth actions
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  setUser: (user: AuthState['user']) => void;
+
+  // App actions
   reset: () => void;
   startTimer: () => void;
   stopTimer: () => void;
@@ -147,7 +156,9 @@ const aggregateData = (
 export const usePlankStore = create<PlankState>()(
   persist(
     (set, get) => ({
-      // Initial state
+      // Initial state with auth properties
+      user: null,
+      loading: false,
       sessions: [],
       reminderSettings: {
         enabled: true,
@@ -244,8 +255,7 @@ export const usePlankStore = create<PlankState>()(
         );
       },
 
-      setManualTarget: (target: number | null) => 
-        set({ manualTarget: target }),
+      setManualTarget: (target: number | null) => set({ manualTarget: target }),
 
       requestNotificationPermission: async () => {
         if ('Notification' in window) {
@@ -259,8 +269,69 @@ export const usePlankStore = create<PlankState>()(
         }
       },
 
+      // Auth state management
+      setUser: (user) => set({ user }),
+
+      // Auth methods
+      signInWithGoogle: async () => {
+        set({ loading: true });
+        try {
+          const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: window.location.origin,
+            },
+          });
+          if (error) throw error;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      signIn: async (email: string, password: string) => {
+        set({ loading: true });
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+          if (error) throw error;
+          set({ user: data.user });
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      signUp: async (email: string, password: string) => {
+        set({ loading: true });
+        try {
+          const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+          });
+          if (error) throw error;
+          set({ user: data.user });
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      signOut: async () => {
+        set({ loading: true });
+        try {
+          const { error } = await supabase.auth.signOut();
+          if (error) throw error;
+          set({ user: null });
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      // Reset app state
       reset: () =>
         set({
+          user: null,
+          loading: false,
           sessions: [],
           reminderSettings: {
             enabled: true,

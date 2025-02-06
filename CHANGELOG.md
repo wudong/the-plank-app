@@ -4,6 +4,13 @@
 
 ### Added
 
+- Added Supabase authentication integration for user accounts
+- Added sign in/sign up dialog with email/password authentication
+- Added Google Sign-In functionality
+- Added auth state management in plank store
+- Added auth-related UI elements in sidebar (sign in/sign out buttons)
+- Added loading states for auth operations
+
 - Added 30-day session duration line chart with daily averages in Historical page
 - Added day/week/month filtering tabs in Historical page for better session analysis
 - Added manual target time setting by clicking on target display in Timer component
