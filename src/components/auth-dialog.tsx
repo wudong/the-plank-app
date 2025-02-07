@@ -9,9 +9,7 @@ import {
   Stack,
   Typography,
   Alert,
-  Divider,
 } from '@mui/material';
-import GoogleIcon from '@mui/icons-material/Google';
 import { usePlankStore } from '../store/plank-store';
 
 interface AuthDialogProps {
