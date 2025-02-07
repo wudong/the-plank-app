@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added Netlify status badge to README.md
+
 - Added Supabase authentication integration for user accounts
 - Added sign in/sign up dialog with email/password authentication
 - Added Google Sign-In functionality

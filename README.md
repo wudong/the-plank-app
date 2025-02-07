@@ -1,5 +1,7 @@
 # Plank Training App
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1803d138-8696-4bf2-a409-bf7501ad8868/deploy-status)](https://app.netlify.com/sites/theplankapp/deploys)
+
 This project is a plank logging application built with React, TypeScript, and Vite. It allows users to time their plank sessions, track their progress, and visualize historical data through different views and charts. This README provides an overview of the project and instructions for setup and usage.
 
 ## Features

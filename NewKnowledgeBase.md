@@ -5,7 +5,6 @@
 - Zustand can be extended with auth state by using the persist middleware to maintain login state across refreshes
 - @supabase/auth-helpers-react's SessionContextProvider is no longer needed as @supabase/ssr provides better SSR support and simpler client-side auth management x2
 - Auth state should be centralized in the store rather than using context for simpler state management
-- SessionContextProvider from Supabase is useful for auth helpers but not necessary for basic auth flow
 - Using onAuthStateChange listener in App component ensures auth state is always in sync with Supabase
 - Prefer async/await with proper error handling in auth methods over promise chains
 - Loading states should be managed at the store level to provide consistent UI feedback
