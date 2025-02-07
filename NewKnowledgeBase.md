@@ -41,6 +41,7 @@
 
 - Local component state should be synchronized with global state using useEffect to prevent inconsistencies during rerenders
 - When a component's state depends on an external state (like timer.isActive), adding an effect to reset local state when the external state changes prevents state desynchronization
+- Zustand's persist middleware 'partialize' option can be used to exclude specific state properties from persistence, useful for transient states like loading flags
 
 ## Streak Calculation Insights
 

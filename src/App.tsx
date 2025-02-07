@@ -140,7 +140,6 @@ export const App: React.FC = () => {
         const { user_metadata } = session.user;
         store.updateUserProfile(user_metadata.full_name, user_metadata.avatar_url);
       }
-
       store.setUser(session?.user ?? null);
     });
 

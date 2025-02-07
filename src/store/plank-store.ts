@@ -337,14 +337,9 @@ export const usePlankStore = create<PlankState>()(
       },
 
       signOut: async () => {
-        set({ loading: true });
-        try {
-          const { error } = await supabase.auth.signOut();
-          if (error) throw error;
-          set({ user: null });
-        } finally {
-          set({ loading: false });
-        }
+        set({ user: null });
+        const { error } = await supabase.auth.signOut({ scope: 'local' });
+        if (error) throw error;
       },
 
       // Reset app state
@@ -379,6 +374,10 @@ export const usePlankStore = create<PlankState>()(
     }),
     {
       name: 'plank-storage',
+      partialize: (state) => ({
+        ...state,
+        loading: undefined, // exclude loading state from persistence
+      }),
     }
   )
 );

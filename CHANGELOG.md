@@ -5,6 +5,7 @@
 ### Fixed
 
 - Fixed Google One Tap sign-in not working in local development by ensuring proper script loading order and callback initialization
+- Fixed loading state persistence in Zustand store to prevent stale loading states after page refresh
 
 All notable changes to this project will be documented in this file.
 
