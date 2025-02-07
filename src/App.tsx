@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePlankStore } from './store/plank-store';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from './lib/supabase';
 import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import { Menu as MenuIcon, Download as DownloadIcon } from '@mui/icons-material';
@@ -147,10 +146,8 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <SessionContextProvider supabaseClient={supabase}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </SessionContextProvider>
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 };

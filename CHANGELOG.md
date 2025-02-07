@@ -17,6 +17,7 @@
 
 - Modified updateUserProfile method in plank store to accept name and avatar separately
 - Updated Sidebar component to use the new updateUserProfile method signature
+- Updated Supabase auth implementation to use @supabase/ssr instead of deprecated @supabase/auth-helpers-react
 
 - Added 30-day session duration line chart with daily averages in Historical page
 - Added day/week/month filtering tabs in Historical page for better session analysis
