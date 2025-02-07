@@ -172,28 +172,15 @@ const Sidebar: React.FC<SidebarProps> = ({
               <ListItemText primary="Clean Data" />
             </ListItem>
             <Divider sx={{ my: 1 }} />
-            {loading ? (
-              <ListItem>
-                <ListItemIcon>
-                  <CircularProgress size={24} />
-                </ListItemIcon>
-                <ListItemText primary="Loading..." />
-              </ListItem>
-            ) : user ? (
-              <ListItem button onClick={signOut}>
-                <ListItemIcon>
-                  <LogoutIcon />
-                </ListItemIcon>
-                <ListItemText primary="Sign Out" />
-              </ListItem>
-            ) : (
-              <ListItem button onClick={() => setAuthDialogOpen(true)}>
-                <ListItemIcon>
-                  <LoginIcon />
-                </ListItemIcon>
-                <ListItemText primary="Sign In" />
-              </ListItem>
-            )}
+            <ListItem
+              button
+              onClick={loading ? undefined : user ? signOut : () => setAuthDialogOpen(true)}
+            >
+              <ListItemIcon>
+                {loading ? <CircularProgress size={24} /> : user ? <LogoutIcon /> : <LoginIcon />}
+              </ListItemIcon>
+              <ListItemText primary={loading ? 'Loading...' : user ? 'Sign Out' : 'Sign In'} />
+            </ListItem>
           </List>
         </Box>
       </Drawer>
