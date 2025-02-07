@@ -385,6 +385,8 @@ export const usePlankStore = create<PlankState>()(
 
 // @ts-expect-error it is used by the google sign in button
 globalThis.handleSignInWithGoogle = async (response: any) => {
+  console.debug('Handle signin in with Google ID Token', response);
+
   const { error } = await supabase.auth.signInWithIdToken({
     provider: 'google',
     token: response.credential,
@@ -401,10 +403,15 @@ globalThis.handleSignInWithGoogle = async (response: any) => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
   if (user) {
+    console.debug('supabase user', user);
+
     const { user_metadata } = user;
     await usePlankStore
       .getState()
       .updateUserProfile(user_metadata.full_name, user_metadata.avatar_url);
+  } else {
+    console.error('cannot retrieve supabase user');
   }
 };

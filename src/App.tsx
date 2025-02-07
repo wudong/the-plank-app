@@ -134,6 +134,7 @@ export const App: React.FC = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_, session) => {
+      console.debug('supabase auth state changed');
       const store = usePlankStore.getState();
       if (session?.user) {
         const { user_metadata } = session.user;
