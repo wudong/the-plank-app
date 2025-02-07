@@ -1,5 +1,9 @@
 # New Knowledge Base
 
+## Authentication
+
+- Google One Tap sign-in requires careful script loading order in development. The callback function must be defined before the Google script loads to prevent "callback is not a function" errors.
+
 ## Supabase Storage Integration Insights
 
 - When uploading files to Supabase storage, use upsert: true to handle both create and update scenarios

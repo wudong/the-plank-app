@@ -47,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const theme = useTheme();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const { user, loading, signOut } = usePlankStore();
+
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [editProfile, setEditProfile] = useState({
     name: userName,
@@ -54,6 +55,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     gender: '',
     avatar: userAvatar,
   });
+
+  console.log('sidebar', user);
 
   const updateUserProfile = usePlankStore((state) => state.updateUserProfile);
 

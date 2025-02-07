@@ -138,8 +138,9 @@ export const App: React.FC = () => {
       const store = usePlankStore.getState();
       if (session?.user) {
         const { user_metadata } = session.user;
-        await store.updateUserProfile(user_metadata.full_name, user_metadata.avatar_url);
+        store.updateUserProfile(user_metadata.full_name, user_metadata.avatar_url);
       }
+
       store.setUser(session?.user ?? null);
     });
 

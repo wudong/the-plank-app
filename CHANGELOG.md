@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed Google One Tap sign-in not working in local development by ensuring proper script loading order and callback initialization
+
 All notable changes to this project will be documented in this file.
 
 ## [Added]
