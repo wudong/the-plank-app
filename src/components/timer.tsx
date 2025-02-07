@@ -18,7 +18,6 @@ import {
   PlayArrow as PlayIcon,
   Stop as StopIcon,
   Refresh as ResetIcon,
-  Flag as FlagIcon,
   Edit as EditIcon,
   Add as AddIcon,
   Remove as RemoveIcon,

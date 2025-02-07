@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { usePlankStore } from '../store/plank-store';
 import { useTimer } from '../hooks/use-timer';
 
