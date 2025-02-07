@@ -22,7 +22,7 @@ export const AuthDialog = ({ open, onClose }: AuthDialogProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const { signIn, signUp, signInWithGoogle } = usePlankStore();
+  const { signIn, signUp } = usePlankStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
