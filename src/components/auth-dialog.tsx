@@ -72,15 +72,6 @@ export const AuthDialog = ({ open, onClose }: AuthDialogProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <Divider sx={{ my: 2 }}>or</Divider>
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<GoogleIcon />}
-              onClick={signInWithGoogle}
-            >
-              Sign in with Google
-            </Button>
             <Typography
               variant="body2"
               color="primary"

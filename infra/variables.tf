@@ -6,7 +6,7 @@ variable "netlify_token" {
 
 variable "site_name" {
   description = "Name of the Netlify site"
-  type        = string  
+  type        = string
 }
 
 variable "custom_domain" {
@@ -38,3 +38,8 @@ variable "supabase_anon_key" {
   sensitive   = true
 }
 
+variable "google_client_id" {
+  description = "Google OAuth Client ID"
+  type        = string
+  sensitive   = true
+}

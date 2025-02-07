@@ -1,5 +1,14 @@
 # New Knowledge Base
 
+## Supabase Storage Integration Insights
+
+- When uploading files to Supabase storage, use upsert: true to handle both create and update scenarios
+- The .from('bucket-name') method in Supabase storage API helps organize different types of data
+- User-specific data in storage should be organized by user ID to maintain data isolation
+- The getPublicUrl method can be used to check file existence and get last modified timestamps
+- It's important to handle both the local and remote state synchronization when implementing data management features
+- Error handling in storage operations should provide clear feedback to users about success/failure
+
 ## Supabase Authentication Integration Insights
 
 - Zustand can be extended with auth state by using the persist middleware to maintain login state across refreshes

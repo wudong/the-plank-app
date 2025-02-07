@@ -7,6 +7,7 @@ import { Menu as MenuIcon, Download as DownloadIcon } from '@mui/icons-material'
 
 import { MainPage } from './pages/MainPage';
 import { HistoricalPage } from './pages/HistoricalPage';
+import { DataManagePage } from './pages/DataManagePage';
 import { SettingsDialog } from './components/settings-dialog';
 import Sidebar from './components/Sidebar';
 
@@ -118,6 +119,7 @@ const AppContent: React.FC = () => {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/historical" element={<HistoricalPage />} />
+          <Route path="/data" element={<DataManagePage />} />
         </Routes>
       </Box>
 

@@ -49,3 +49,15 @@ resource "netlify_environment_variable" "supabase_anon_key" {
     }
   ]
 }
+
+
+resource "netlify_environment_variable" "google_client_id" {
+  site_id = data.netlify_site.plank_app.id
+  key     = "VITE_GOOGLE_CLIENT_ID"
+  values = [
+    {
+      value   = var.google_client_id,
+      context = "all",
+    }
+  ]
+}

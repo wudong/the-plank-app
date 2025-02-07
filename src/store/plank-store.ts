@@ -288,11 +288,12 @@ export const usePlankStore = create<PlankState>()(
         try {
           const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: {
-              redirectTo: window.location.origin,
-            },
           });
-          if (error) throw error;
+
+          if (error) {
+            console.error('Error signing in with Google:', error);
+            throw error;
+          }
 
           // Fetch user data after successful authentication
           const {
@@ -381,3 +382,29 @@ export const usePlankStore = create<PlankState>()(
     }
   )
 );
+
+// @ts-expect-error it is used by the google sign in button
+globalThis.handleSignInWithGoogle = async (response: any) => {
+  const { error } = await supabase.auth.signInWithIdToken({
+    provider: 'google',
+    token: response.credential,
+  });
+
+  if (error) {
+    console.error('Error sign in with Google ID Token:', error);
+    throw error;
+  }
+
+  console.info('Signed in with Google ID Token');
+
+  // Fetch user data after successful authentication
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    const { user_metadata } = user;
+    await usePlankStore
+      .getState()
+      .updateUserProfile(user_metadata.full_name, user_metadata.avatar_url);
+  }
+};

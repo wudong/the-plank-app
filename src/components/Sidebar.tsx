@@ -25,7 +25,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import TimerIcon from '@mui/icons-material/Timer';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
-import DeleteIcon from '@mui/icons-material/Delete';
+import StorageIcon from '@mui/icons-material/Storage';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -47,7 +47,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const theme = useTheme();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const { user, loading, signOut } = usePlankStore();
-  const [cleanDataDialogOpen, setCleanDataDialogOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [editProfile, setEditProfile] = useState({
     name: userName,
@@ -57,21 +56,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   });
 
   const updateUserProfile = usePlankStore((state) => state.updateUserProfile);
-
-  const handleCleanDataClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent drawer from closing
-    setCleanDataDialogOpen(true);
-  };
-
-  const handleConfirmCleanData = useCallback(() => {
-    setCleanDataDialogOpen(false);
-    usePlankStore.getState().reset();
-    onClose();
-  }, [onMenuItemClick, onClose]);
-
-  const handleCloseDialog = () => {
-    setCleanDataDialogOpen(false);
-  };
 
   const handleEditProfile = () => {
     setEditProfileOpen(true);
@@ -165,11 +149,17 @@ const Sidebar: React.FC<SidebarProps> = ({
               <ListItemText primary="Settings" />
             </ListItem>
             <Divider sx={{ my: 1 }} />
-            <ListItem button onClick={handleCleanDataClick}>
+            <ListItem
+              button
+              onClick={() => {
+                onMenuItemClick('/data');
+                onClose();
+              }}
+            >
               <ListItemIcon>
-                <DeleteIcon />
+                <StorageIcon />
               </ListItemIcon>
-              <ListItemText primary="Clean Data" />
+              <ListItemText primary="Data Management" />
             </ListItem>
             <Divider sx={{ my: 1 }} />
             <ListItem
@@ -184,23 +174,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           </List>
         </Box>
       </Drawer>
-
-      <Dialog
-        open={cleanDataDialogOpen}
-        onClose={handleCloseDialog}
-        aria-labelledby="clean-data-dialog-title"
-      >
-        <DialogTitle id="clean-data-dialog-title">Clean All Data</DialogTitle>
-        <DialogContent>
-          Are you sure you want to clean all data and restart? This action cannot be undone.
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleConfirmCleanData} color="error" autoFocus>
-            Clean Data
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       <Dialog open={editProfileOpen} onClose={handleCloseEditProfile}>
         <DialogTitle>Edit Profile</DialogTitle>
